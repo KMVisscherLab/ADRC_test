@@ -17,7 +17,7 @@ For an overview of the processes that lead up to participants in our study under
 Click any of the **[View Protocol]** links in the tables below to open and read or print the standard operating procedures. \
 
 To suggest changes to this document, please email Kristina Visscher. 
-Contact information for the people described here are listed in this password protected document: XXXXlink to box fileXXXX. 
+Contact information for the people described here are listed in this password protected [document](https://uab.app.box.com/file/2495951435335) XXhow to make it visible to all our folksXXXXXXXX. 
 
 
 
@@ -104,8 +104,8 @@ Clinical oversight and management protocols for scan-related incidental findings
 To cite these study workflows in publications or progress reports:
 ```bibtex
 @misc{study_protocols_2026,
-  title  = {Multimodal Imaging Protocols and Processing Pipelines},
-  author = {[PI and Key Personnel]},
+  title  = {UAB ADRC Multimodal Imaging Protocols and Processing Pipelines},
+  author = {[UAB ADRC Staff]},
   year   = {2026},
   doi    = {10.5281/zenodo.placeholder}
 }
