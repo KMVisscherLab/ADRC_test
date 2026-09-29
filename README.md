@@ -13,9 +13,7 @@
 > [!WARNING]
 > **CONFIDENTIALITY NOTICE:** This repository contains study protocols, Standard Operating Procedures (SOPs), and pipeline code. **No Protected Health Information (PHI) or participant identifiable data is stored here.**
 
----
-
-<div style="background: #ffffff; border: 1px solid #d0d7de; border-radius: 8px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+<br>
 
 ## 🧭 Overview
 
@@ -23,11 +21,9 @@
 * **Document Maintenance:** To suggest changes or updates to this documentation, please email Kristina Visscher.
 * **Internal Directory:** Contact information for study personnel is listed in this password-protected [UAB Box Document](https://uab.app.box.com/file/2495951435335) *(ensure access permissions are set for project collaborators)*.
 
-</div>
+<hr style="height: 4px; background: #0969da; border: none; margin: 48px 0 32px 0; border-radius: 2px;" />
 
-<div style="background: #ffffff; border: 1px solid #d0d7de; border-radius: 8px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-
-## 📋 1. Before the Scan (Recruitment & Intake)
+<h2 style="background-color: #f0f4f9; border-left: 6px solid #0969da; padding: 12px 16px; border-radius: 0 6px 6px 0; margin-bottom: 20px;">📋 1. Before the Scan (Recruitment & Intake)</h2>
 
 Participant identification, registry screening, consenting procedures, and MRI/PET visit scheduling.
 
@@ -43,11 +39,9 @@ Participant identification, registry screening, consenting procedures, and MRI/P
 * **PET/MRI Calendar:** Access the master schedule via the password-protected [UABMC Calendar](link-placeholder) *(UABMC credentials required)*.
 * **Slot & Tracer Coordination:** Scheduling depends on scanner slot availability and radiotracer synthesis timing. Detailed coordination workflows are stored in the [Tracer Production & Scheduling Box Folder](link-placeholder).
 
-</div>
+<hr style="height: 4px; background: #0969da; border: none; margin: 48px 0 32px 0; border-radius: 2px;" />
 
-<div style="background: #ffffff; border: 1px solid #d0d7de; border-radius: 8px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-
-## ⏱️ 2. During the Scan (Acquisition Protocols)
+<h2 style="background-color: #f0f4f9; border-left: 6px solid #0969da; padding: 12px 16px; border-radius: 0 6px 6px 0; margin-bottom: 20px;">⏱️ 2. During the Scan (Acquisition Protocols)</h2>
 
 > [!NOTE]
 > Imaging data are collected across two separate visits: **Amyloid Day** and **Tau Day**.
@@ -75,11 +69,9 @@ Participant identification, registry screening, consenting procedures, and MRI/P
 | **Radiochemistry** | Denise Jeffers | Tracer production and delivery timelines |
 | **Participant Handling** | Tyler Stamps | Participant scheduling and suite wrangling |
 
-</div>
+<hr style="height: 4px; background: #0969da; border: none; margin: 48px 0 32px 0; border-radius: 2px;" />
 
-<div style="background: #ffffff; border: 1px solid #d0d7de; border-radius: 8px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-
-## 🔄 3. After the Scan (Preprocessing & Data Storage)
+<h2 style="background-color: #f0f4f9; border-left: 6px solid #0969da; padding: 12px 16px; border-radius: 0 6px 6px 0; margin-bottom: 20px;">🔄 3. After the Scan (Preprocessing & Data Storage)</h2>
 
 Initial image quality checks, standardized preprocessing for open data sharing, and long-term repository uploads.
 
@@ -101,11 +93,9 @@ Initial image quality checks, standardized preprocessing for open data sharing, 
 | **Summary of Storage Contents** | Local / Cloud Tiers | [View Storage Manifest](03-after-the-scan/data-storage/storage-summary-manifest.md) |
 | **SCAN / DVCID & LONI Archiving** | LONI / External Repositories | [View Archiving SOP](03-after-the-scan/data-storage/scan-dvcid-and-loni-archiving.md) |
 
-</div>
+<hr style="height: 4px; background: #0969da; border: none; margin: 48px 0 32px 0; border-radius: 2px;" />
 
-<div style="background: #ffffff; border: 1px solid #d0d7de; border-radius: 8px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-
-## 📊 4. Dataset Processing & Analytics
+<h2 style="background-color: #f0f4f9; border-left: 6px solid #0969da; padding: 12px 16px; border-radius: 0 6px 6px 0; margin-bottom: 20px;">📊 4. Dataset Processing & Analytics</h2>
 
 Secondary pipelines, biomarker quantification, and downstream structural analyses.
 
@@ -113,11 +103,9 @@ Secondary pipelines, biomarker quantification, and downstream structural analyse
 | :--- | :--- | :--- |
 | **White Matter Hyperintensity (WMH)** | Lesion segmentation, volumetric extraction, and scripts | [View Pipeline & Code](04-dataset-processing/whitematter-hyperintensity-pipeline.md) |
 
-</div>
+<hr style="height: 4px; background: #0969da; border: none; margin: 48px 0 32px 0; border-radius: 2px;" />
 
-<div style="background: #ffffff; border: 1px solid #d0d7de; border-radius: 8px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-
-## 🩺 5. Clinical Safety & Monitoring
+<h2 style="background-color: #f0f4f9; border-left: 6px solid #0969da; padding: 12px 16px; border-radius: 0 6px 6px 0; margin-bottom: 20px;">🩺 5. Clinical Safety & Monitoring</h2>
 
 Clinical oversight and management protocols for scan-related incidental findings.
 
@@ -125,11 +113,9 @@ Clinical oversight and management protocols for scan-related incidental findings
 | :--- | :--- | :---: | :--- |
 | **Standard of Care for ARIA** | ARIA-E / ARIA-H Monitoring & Escalation | 📄 Word Doc | [View Protocol](05-clinical/aria-standard-of-care.docx) |
 
-</div>
+<hr style="height: 4px; background: #0969da; border: none; margin: 48px 0 32px 0; border-radius: 2px;" />
 
-<div style="background: #f6f8fa; border: 1px solid #d0d7de; border-radius: 8px; padding: 20px 24px; margin-bottom: 24px;">
-
-## ℹ️ Archiving & Citation
+<h2 style="background-color: #f6f8fa; border-left: 6px solid #57606a; padding: 12px 16px; border-radius: 0 6px 6px 0; margin-bottom: 20px;">ℹ️ Archiving & Citation</h2>
 
 To cite these study workflows in publications or progress reports:
 
