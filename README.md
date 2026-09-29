@@ -54,7 +54,7 @@ Imaging Data are collected on "Amyloid Day" and "Tau Day".
 * DESCRIBE THE PROCESS OF UPLOADING THE IMAGING DATA, BOTH PET AND MRI (PERHAPS LINK TO DOCUMENT)
 * DESCRIBE WHERE THE OTHER DATA, INCLUDING REDCAP, GOES (PERHAPS LINK TO DOCUMENT)
 
-For questions about scan acquisition, contact: Dean Fang for science-based PET questions, Kristina Visscher for science-based Amyloid questions, Denise Jeffers for 
+For questions about scan acquisition, contact: Dean Fang for science-based PET questions, Kristina Visscher for science-based MRI questions, Denise Jeffers for questions about tracer production, Tyler Stamps for participant wrangling.
 ---
 
 ## 🔄 3. After the Scan (Preprocessing & Data Storage)
@@ -62,7 +62,8 @@ Initial image quality checks, standardized preprocessing for open data sharing, 
 
 ### A. Pre-Processing for Data Sharing
 
-**Describe the process that Mohammad goes through to an
+**Describe the process that Mohammad goes through to do a first pass analysis of the dataset.
+**Describe the hand off from Mohammad to Deepak and Vee to get the dataset ready for further review and upload to SCAN. [maybe this is a link to a word document?]
 
 | Pipeline Step | Focus Area | Link |
 | :--- | :--- | :--- |
