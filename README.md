@@ -5,8 +5,8 @@
 ![NIH Funding](https://img.shields.io/badge/NIH-Supported-blue)
 ![HIPAA Notice](https://img.shields.io/badge/Data_Safety-No_PII-red)
 
-> **Principal Investigator:** [PI Name]  
-> **Study Contact:** [Lab Manager / Coordinator Email]  
+> **This document is meant for two purposes: First, to serve as a quick reference for identifying and organizing information needed for the project during performance of the project.  Second, it will serve as documentation of the protocols used as part of this project.**
+>  
 > 
 > ⚠️ **CONFIDENTIALITY NOTICE:** This repository contains study protocols, Standard Operating Procedures (SOPs), and pipeline code. **No Protected Health Information (PHI) or participant identifiable data is stored here.**
 
@@ -27,8 +27,9 @@ Participant identification, registry screening, consenting procedures, and MRI/P
 | **Enrollment, Consenting & Scheduling** | All Participants | 📄 Word Doc | [View Protocol](01-before-the-scan/enrollment-consenting-scheduling.docx) |
 
 ### Scheduling
-* Schedules for the PET MRI are in a password protected calendar here: ###### (you will need your uabmc credentials to view)
-* Scheduling for the PET MRI depends on time slots available, along with tracer production.  More information about that is here XXXXXXX 
+* Schedules for the PET MRI are in a password protected calendar here: ###link to hsis calendar### (you will need your uabmc credentials to view)
+* Scheduling for the PET MRI depends on time slots available, along with tracer production.  More information about that is here XXbox folderXXXXX
+* 
 ---
 
 ## ⏱️ 2. During the Scan (Acquisition Protocols)
