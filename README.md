@@ -14,7 +14,7 @@
 
 ## 🧭 Overview
 For an overview of the processes that lead up to participants in our study undergoing imaging, please see ***Chad's flowchart** 
-Click any of the **[View Protocol]** links in the tables below to open and read or print the standard operating procedures. \
+\
 
 To suggest changes to this document, please email Kristina Visscher. 
 Contact information for the people described here are listed in this password protected [document](https://uab.app.box.com/file/2495951435335) XXhow to make it visible to all our folksXXXXXXXX. 
