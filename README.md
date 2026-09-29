@@ -53,7 +53,9 @@ Imaging Data are collected on "Amyloid Day" and "Tau Day".
 ### Data Uploads:
 * DESCRIBE THE PROCESS OF UPLOADING THE IMAGING DATA, BOTH PET AND MRI (PERHAPS LINK TO DOCUMENT)
 * DESCRIBE WHERE THE OTHER DATA, INCLUDING REDCAP, GOES (PERHAPS LINK TO DOCUMENT)
-For questions about scan acquisition, contact: Dean Fang for science-based PET questions, Kristina Visscher for science-based MRI questions, Denise Jeffers for questions about tracer production, Tyler Stamps for participant wrangling.
+
+### Contacts:
+* For questions about scan acquisition, contact: Dean Fang for science-based PET questions, Kristina Visscher for science-based MRI questions, Denise Jeffers for questions about tracer production, Tyler Stamps for participant wrangling.
 ---
 
 ## 🔄 3. After the Scan (Preprocessing & Data Storage)
