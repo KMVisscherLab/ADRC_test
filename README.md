@@ -1,5 +1,5 @@
 
-# 🧠 UAB ADRC Multimodal Imaging & Biomarker Study Protocols
+# 🧠 UAB ADRC Multimodal Imaging & Biomarker Study Protocols 🧠 
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.placeholder.svg)](https://zenodo.org/)
 ![NIH Funding](https://img.shields.io/badge/NIH-Supported-blue)
@@ -12,8 +12,14 @@
 
 ---
 
-## 🧭 Fast Navigation Guide for Study Staff
-Click any of the **[View Protocol]** links in the tables below to open and read or print the standard operating procedures. 
+## 🧭 Overview
+For an overview of the processes that lead up to participants in our study undergoing imaging, please see ***Chad's flowchart** 
+Click any of the **[View Protocol]** links in the tables below to open and read or print the standard operating procedures. \
+
+To suggest changes to this document, please email Kristina Visscher. 
+Contact information for the people described here are listed in this password protected document: XXXXlink to box fileXXXX. 
+
+
 
 ---
 
@@ -27,7 +33,7 @@ Participant identification, registry screening, consenting procedures, and MRI/P
 | **Enrollment, Consenting & Scheduling** | All Participants | 📄 Word Doc | [View Protocol](01-before-the-scan/enrollment-consenting-scheduling.docx) |
 
 ### Scheduling
-* Schedules for the PET MRI are in a password protected calendar here: ###link to hsis calendar### (you will need your uabmc credentials to view)
+* Schedules for the PET MRI are in a password protected calendar here: ###link to uabmc calendar### (you will need your uabmc credentials to view)
 * Scheduling for the PET MRI depends on time slots available, along with tracer production.  More information about that is here XXbox folderXXXXX
 * 
 ---
@@ -43,14 +49,20 @@ Imaging Data are collected on "Amyloid Day" and "Tau Day".
 * Possible PET tracers include: XXXXXX
 * [Manual of Procedures](02-during-the-scan/amy-MOP.docx) are detailed explanations of the set of procedures, including radiotracer administration timelines 
 * [Participant Information Sheets](02-during-the-scan/amy-PI.docx) are forms that include checklists for during-scan acquisition and places for notes during the scan.
-  
 
+### Data Uploads:
+* DESCRIBE THE PROCESS OF UPLOADING THE IMAGING DATA, BOTH PET AND MRI (PERHAPS LINK TO DOCUMENT)
+* DESCRIBE WHERE THE OTHER DATA, INCLUDING REDCAP, GOES (PERHAPS LINK TO DOCUMENT)
+
+For questions about scan acquisition, contact: Dean Fang for science-based PET questions, Kristina Visscher for science-based Amyloid questions, Denise Jeffers for 
 ---
 
 ## 🔄 3. After the Scan (Preprocessing & Data Storage)
 Initial image quality checks, standardized preprocessing for open data sharing, and long-term repository uploads.
 
 ### A. Pre-Processing for Data Sharing
+
+**Describe the process that Mohammad goes through to an
 
 | Pipeline Step | Focus Area | Link |
 | :--- | :--- | :--- |
