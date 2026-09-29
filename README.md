@@ -26,6 +26,9 @@ Participant identification, registry screening, consenting procedures, and MRI/P
 | **Participant Recruitment** | CLARITI Cohort | 📄 Word Doc | [View Protocol](01-before-the-scan/recruitment-clariti.docx) |
 | **Enrollment, Consenting & Scheduling** | All Participants | 📄 Word Doc | [View Protocol](01-before-the-scan/enrollment-consenting-scheduling.docx) |
 
+### Scheduling
+* Schedules for the PET MRI are in a password protected calendar here: ###### (you will need your uabmc credentials to view)
+* Scheduling for the PET MRI depends on time slots available, along with tracer production.  More information about that is here XXXXXXX 
 ---
 
 ## ⏱️ 2. During the Scan (Acquisition Protocols)
