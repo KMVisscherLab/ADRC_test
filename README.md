@@ -29,12 +29,17 @@ Participant identification, registry screening, consenting procedures, and MRI/P
 ---
 
 ## ⏱️ 2. During the Scan (Acquisition Protocols)
-Scanner console setup, radiotracer administration timelines, and acquisition SOPs.
+Imaging Data are collected on "Amyloid Day" and "Tau Day".
+### Tau Day: 
+* Possible PET tracers include: XXXXXX
+* [Manual of Procedures](02-during-the-scan/tau-MOP.docx) are detailed explanations of the set of procedures, including radiotracer administration timelines 
+* [Participant Information Sheets](02-during-the-scan/tau-PI.docx) are forms that include checklists for during-scan acquisition and places for notes during the scan.
 
-| Protocol Name | Modality / Tracer | Format | Link |
-| :--- | :--- | :--- | :--- |
-| **Amyloid Imaging Protocol** | Amyloid PET / MRI | 📄 Word Doc | [View Protocol](02-during-the-scan/amyloid-scan-protocol.docx) |
-| **PiB PET Protocol** | [11C]-PiB PET | 📄 Word Doc | [View Protocol](02-during-the-scan/pib-pet-protocol.docx) |
+### Amyloid Day: 
+* Possible PET tracers include: XXXXXX
+* [Manual of Procedures](02-during-the-scan/amy-MOP.docx) are detailed explanations of the set of procedures, including radiotracer administration timelines 
+* [Participant Information Sheets](02-during-the-scan/amy-PI.docx) are forms that include checklists for during-scan acquisition and places for notes during the scan.
+  
 
 ---
 
