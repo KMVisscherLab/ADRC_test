@@ -5,7 +5,7 @@
 ![NIH Funding](https://img.shields.io/badge/NIH-Supported-blue)
 ![HIPAA Notice](https://img.shields.io/badge/Data_Safety-No_PII-red)
 
-> **This document is meant for two purposes: First, to serve as a quick reference for identifying and organizing information needed for the project during performance of the project.  Second, it will serve as documentation of the protocols used as part of this project.**
+> **This document is meant for two purposes: First, to serve as a quick reference for identifying and organizing information needed for the project during performance of the project.  Second, it will serve as documentation of the protocols used as part of this project.  Links to this document will be posted on the front page of the MOPs in the PET/MRI room so that people can find this information easily. **
 >  
 > 
 > ⚠️ **CONFIDENTIALITY NOTICE:** This repository contains study protocols, Standard Operating Procedures (SOPs), and pipeline code. **No Protected Health Information (PHI) or participant identifiable data is stored here.**
