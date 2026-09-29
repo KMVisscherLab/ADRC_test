@@ -132,3 +132,1598 @@ The pipeline supports two analysis branches:
 The selected branch must be recorded for every subject and reflected in the output folder, output filename, processing log, and cohort-level results. Results generated with and without denoising should not be mixed without an explicit analysis plan.
 
 ---
+
+
+# Scope, Paths, Access, and Software
+
+@[toc]()
+
+## 2. Scope
+
+### Included
+
+- T1 and T2-FLAIR DICOM discovery
+- DICOM-to-NIfTI conversion
+- Optional Non-Local Means denoising of ADRC T2-FLAIR images
+- Separate processing and outputs with or without denoising
+- Creation of both `.nii` and `.nii.gz` files
+- FLAIR-to-T1 registration
+- FLAIR-assisted T1 intensity modification for pial correction
+- FreeSurfer input preparation
+- FreeSurfer Slurm submission
+- Selection of an available FreeSurfer result
+- Registration between native FLAIR and FreeSurfer space
+- Resampling of `aparc+aseg`, `brainmask`, and FreeSurfer T1
+- Postprocessing of MATLAB LST-LPA outputs
+- Probability-map thresholding at `0.36`
+- Lesion grouping and classification
+- Subject-level WMH volume calculation
+- Cohort-level CSV compilation
+- Identification of high, low, and median cases for QC
+- Optional transformation of WMH labels to native FLAIR space
+- Optional creation of a derived WMH DICOM series
+
+
+## 3. Current Project Paths
+
+The notebook currently uses the following top-level paths:
+
+```python
+dpath_top = "/data/project/jonmc-lab/fang_collab/ALL_ADRC_Dataset"
+dpath_data = os.path.join(dpath_top, "PIB_new")
+```
+
+The local SPARC code repository is currently defined as:
+
+```python
+os.environ["FPATH_scripts"] = "/home/mhnadian/Documents/sparc"
+```
+
+The FreeSurfer Slurm launcher is:
+
+```text
+/home/mhnadian/Documents/sparc/wmh/sarray_freesurfer.sh
+```
+
+The two WMH postprocessing scripts are:
+
+```text
+/home/mhnadian/Documents/sparc/wmh/lpa_processOutput1.py
+/home/mhnadian/Documents/sparc/wmh/wmh_analyze.py
+```
+
+> These are user-specific and project-specific paths. A successor must either receive access to the same locations or update the configuration section before running the notebook.
+
+---
+
+## 4. Expected Directory Structure
+
+```text
+ALL_ADRC_Dataset/
+├── PIB_new/
+│   ├── <SUBJECT_ID>/
+│   │   ├── DICOM/
+│   │   │   ├── <T1_SERIES_FOLDER>/
+│   │   │   └── <FLAIR_SERIES_FOLDER>/
+│   │   ├── NIFTI/
+│   │   │   ├── t1w.nii
+│   │   │   ├── t1w.nii.gz
+│   │   │   ├── t2flair.nii
+│   │   │   ├── t2flair.nii.gz
+│   │   │   ├── flair2t1.lta
+│   │   │   ├── t2flair_PIAL_correction.nii
+│   │   │   ├── t1w__PIAL_corrected.nii
+│   │   │   ├── T1w_R.nii
+│   │   │   ├── aparc+aseg.nii
+│   │   │   └── brainmask.nii
+│   │   ├── freesurfer/
+│   │   │   └── mri/
+│   │   │       ├── T1.mgz
+│   │   │       ├── aparc+aseg.mgz
+│   │   │       └── brainmask.mgz
+│   │   ├── wmh/
+│   │   │   ├── ples_FLAIR.nii
+│   │   │   ├── plesCoreg_FLAIR.nii
+│   │   │   ├── wmhMaskCoreg_FLAIR_p0.36.nii
+│   │   │   ├── wmh4label_p0.36.nii
+│   │   │   ├── lesion_groupStats_p0.36.csv
+│   │   │   ├── rwmh4label_p0.36.nii
+│   │   │   └── wmh_Mask_DICOM/
+│   │   ├── native_to_fs.lta
+│   │   └── fs_to_native.lta
+│   └── ...
+├── freesurfer/
+│   ├── subraw/
+│   ├── slurm/
+│   ├── ALL_PIB_FS73/
+│   ├── ALL_PIB_FS81/
+│   └── other approved FreeSurfer outputs/
+├── wmh/
+│   └── compiled_wmh_p0.36.csv
+├── freesurfer_used_log.csv
+└── WMH_Total_PIB_subjects_denoised_<DATE>.csv
+```
+
+---
+
+## 5. Required Access
+
+A user must have:
+
+- Access to the UAB project storage containing `ALL_ADRC_Dataset`
+- Permission to read and write subject folders
+- Access to the T1 and T2-FLAIR DICOM series
+- Access to the SPARC WMH scripts
+- Access to MATLAB and the approved LST-LPA installation
+- Access to FreeSurfer commands
+- Access to the UAB Cheaha/Slurm environment for the tested batch workflow, or a compatible local workstation configuration
+- Permission to create, delete, rename, and copy folders in the processing directory
+
+
+---
+
+## 6. Software and Python Dependencies
+
+The notebook kernel metadata indicates:
+
+```text
+Python 3.11.4
+Kernel: Python 3 (ipykernel)
+```
+
+Python packages imported by the notebook include:
+
+```text
+numpy
+pandas
+nibabel
+dicom2nifti
+SimpleITK
+pydicom
+tqdm
+scikit-image
+```
+
+Python standard-library modules include:
+
+```text
+os
+sys
+glob
+shutil
+gzip
+subprocess
+csv
+datetime
+concurrent.futures
+```
+
+External software and commands include:
+
+```text
+FreeSurfer
+mri_coreg
+mri_vol2vol
+lta_convert
+MATLAB
+LST-LPA
+Slurm
+Particle swarm optimization implementation used for NLM parameter selection
+```
+
+A reproducible environment file should be added to this component, for example:
+
+```text
+environment.yml
+requirements.txt
+FreeSurfer_version.txt
+MATLAB_LST_version.txt
+```
+
+The notebook does not record exact versions for most Python packages, FreeSurfer, MATLAB, or LST-LPA. These versions must be added before the handoff is considered complete.
+
+---
+
+
+
+# Optional NLM Denoising and Data Preparation
+
+@[toc]()
+
+## 7. Optional T2-FLAIR Denoising
+
+### 7.1 Purpose
+
+An optional denoising branch is available for ADRC T2-FLAIR subjects. The goal is to reduce noise while preserving lesion boundaries, anatomical edges, and fine image structures before downstream WMH processing.
+
+The current approach uses Non-Local Means (NLM) denoising. NLM reduces noise by finding similar image patches across the image and averaging information from those patches. Unlike simple local smoothing, it uses image self-similarity and can better preserve edges and small structures.
+
+### 7.2 Current Implementation
+
+| Description | Implementation | Used parameters | Notes |
+|---|---|---|---|
+| The NLM algorithm denoises images by averaging similar patches across the image. It is intended to preserve edges and fine structures by exploiting self-similarity rather than relying only on local smoothing. The noise standard deviation, `sigma`, is estimated automatically. The filtering strength is based on `h = h_factor × sigma`, with a minimum filtering-strength constraint. | Implemented with `scikit-image` function `denoise_nl_means()` after normalization of the MRI intensity values to `[0,1]`. | `h_factor = 1.15`; `min_h = 0.01`; `patch_size = 5`; `patch_distance = 6`; `fast_mode = True` | Normalization improves consistency across subjects. Increasing `h_factor` generally increases smoothing. `patch_size` and `patch_distance` affect edge preservation, denoising performance, processing time, and memory use. |
+
+The intended filtering-strength rule is:
+
+```text
+estimated noise = sigma
+candidate filtering strength = h_factor × sigma
+minimum allowed filtering strength = min_h
+```
+
+The implementation should explicitly document whether the final code uses:
+
+```python
+h = max(min_h, h_factor * sigma)
+```
+
+or another minimum-strength rule.
+
+### 7.3 Parameter Optimization
+
+The current NLM parameters were selected for ADRC T2-FLAIR data with the assistance of particle swarm optimization (PSO). PSO was used to search for a parameter combination that improved the denoising objective while maintaining image structure.
+
+The optimization and initial assessment were performed for the ADRC T2-FLAIR dataset. The denoised results were compared using the CHS score as the primary comparison measure. The preliminary results indicated acceptable denoising performance.
+
+This result should be described as preliminary. Additional evaluation is required before concluding that the denoising method improves WMH segmentation accuracy, clinical validity, or generalizability.
+
+The denoising documentation must eventually include:
+
+- Full definition and implementation of the CHS score
+- PSO objective function
+- Parameters included in the optimization
+- Search ranges
+- Swarm size
+- Number of iterations
+- Random seed
+- Stopping criteria
+- Number and characteristics of subjects used
+- Comparison against the original non-denoised images
+- Visual QC procedure
+- Statistical analysis
+- Effect on LST-LPA probability maps
+- Effect on WMH class volumes
+- Effect on failed and low-quality cases
+
+### 7.4 Scanner and Protocol Dependence
+
+The current parameters were optimized for the available ADRC T2-FLAIR subjects. They should not automatically be assumed to be optimal for:
+
+- A different scanner manufacturer
+- A different scanner model
+- A different field strength
+- A different coil
+- A different reconstruction method
+- A different voxel size
+- A different FLAIR sequence
+- A different site
+- A different patient population
+
+For data from another scanner or acquisition protocol, re-evaluate the noise estimate, visual appearance, CHS score, lesion preservation, and downstream WMH results. Re-optimization of `h_factor`, `min_h`, `patch_size`, or `patch_distance` may be required.
+
+### 7.5 Processing With and Without Denoising
+
+Both outputs are supported:
+
+```text
+Original T2-FLAIR branch
+Denoised T2-FLAIR branch
+```
+
+Recommended processing labels:
+
+```text
+denoising_status = original
+denoising_status = nlm_pso_optimized
+```
+
+Recommended output organization:
+
+```text
+<SUBJECT>/
+├── NIFTI/
+│   ├── t2flair_original.nii
+│   └── t2flair_nlm_denoised.nii
+├── wmh_original/
+└── wmh_denoised/
+```
+
+The original T2-FLAIR image must always be retained. The denoising step must create a new image and must not overwrite the source image.
+
+Every subject-level and cohort-level output should record:
+
+- Whether denoising was used
+- NLM parameter values
+- Estimated `sigma`
+- Final filtering strength `h`
+- Software/package version
+- Processing date
+- Code version
+- QC status
+
+### 7.6 Denoising Quality Control
+
+For each denoised subject, compare the original and denoised T2-FLAIR images side by side.
+
+Confirm:
+
+- [ ] Noise is visibly reduced.
+- [ ] Ventricular boundaries remain sharp.
+- [ ] Cortical and deep gray-matter boundaries remain identifiable.
+- [ ] Small WMH lesions are not removed.
+- [ ] Larger lesions are not excessively blurred.
+- [ ] No artificial texture or patch artifact is introduced.
+- [ ] Image orientation and affine are unchanged.
+- [ ] Intensity normalization and restoration are documented.
+- [ ] The downstream LST-LPA output remains anatomically plausible.
+- [ ] Differences in WMH volume relative to the original branch are reviewed.
+
+### 7.7 Scientific Validation Status
+
+Current status:
+
+- **Pipeline execution:** Tested on Cheaha.
+- **NLM implementation:** Available as an optional processing branch.
+- **Parameter selection:** Assisted by PSO for ADRC T2-FLAIR subjects.
+- **Primary initial comparison:** CHS score.
+- **Preliminary finding:** Denoising performance appeared acceptable.
+- **Current limitation:** Further validation is required.
+
+Recommended additional validation includes:
+
+- Larger subject sample
+- Independent test set
+- Multiple scanners and protocols
+- Reader-based visual scoring
+- Test-retest assessment, when available
+- Comparison with alternative denoising methods
+- Analysis of downstream WMH segmentation and volume changes
+- Statistical assessment of agreement between denoised and original branches
+- Evaluation of whether denoising improves accuracy rather than only image appearance
+
+---
+
+## 8. Notebook Cell Map
+
+The original notebook contains 38 cells. Their purposes are:
+
+| Cells | Purpose |
+|---|---|
+| 0–3 | Imports, working directory, and initial data paths |
+| 4–6 | T1/FLAIR series preparation and DICOM-to-NIfTI conversion |
+| 7–8 | FLAIR-assisted T1 preparation for pial correction |
+| 9–13 | FreeSurfer preparation, submission, result selection, and native-space resampling |
+| 14–15 | Beginning of WMH postprocessing after MATLAB LST-LPA |
+| 16–25 | Folder renaming, optional backups, cleanup, and filename standardization |
+| 26–27 | Probability-map thresholding and lesion-mask creation |
+| 28–29 | Lesion grouping, classification, and volume calculation |
+| 30–32 | Cohort-level compilation and QC-case selection |
+| 33–35 | Label transformation to FLAIR space and optional DICOM output |
+| 36 | Final renaming of the active `wmh` folder |
+| 37 | Empty cell |
+
+---
+
+# PART A — DATA PREPARATION
+
+## 9. Initialize the Project Paths
+
+Run the imports and path configuration first.
+
+```python
+import os
+import sys
+import glob
+import numpy as np
+import shutil
+import gzip
+import pandas as pd
+import dicom2nifti
+
+dpath_top = "/data/project/jonmc-lab/fang_collab/ALL_ADRC_Dataset"
+dpath_data = os.path.join(dpath_top, "PIB_new")
+
+subject_ids = np.sort([
+    name for name in os.listdir(dpath_data)
+    if os.path.isdir(os.path.join(dpath_data, name))
+])
+
+subject_paths = [
+    os.path.join(dpath_data, subject_id)
+    for subject_id in subject_ids
+]
+```
+
+### Recommended improvement
+
+The original notebook repeatedly changes the meaning of the variable `subjs`. In some cells it contains full paths; in another cell it contains subject IDs only. This creates a serious risk of incorrect path construction.
+
+Use two variables consistently:
+
+```python
+subject_ids
+subject_paths
+```
+
+Do not reuse one variable for both meanings.
+
+---
+
+## 10. Select T1 and T2-FLAIR Series
+
+The notebook notes that series selection may follow:
+
+```text
+/data/project/jonmc-lab/fang_collab/ALL_ADRC_Dataset/Codes/Final_T1_T2_Ranking.m
+```
+
+The Python code then searches the direct subfolders of each subject’s `DICOM` folder and selects the first folder whose name contains:
+
+```text
+FLAIR
+T1
+```
+
+### Current logic
+
+```python
+all_subdirs = [
+    name for name in os.listdir(dicom_parent)
+    if os.path.isdir(os.path.join(dicom_parent, name))
+]
+
+dpath_flair = next(
+    (
+        os.path.join(dicom_parent, name)
+        for name in all_subdirs
+        if "FLAIR" in name.upper()
+    ),
+    None
+)
+
+dpath_t1 = next(
+    (
+        os.path.join(dicom_parent, name)
+        for name in all_subdirs
+        if "T1" in name.upper()
+    ),
+    None
+)
+```
+
+### Required QC
+
+The first folder containing `T1` or `FLAIR` is not always the correct research series. Before conversion, confirm:
+
+- Correct participant and visit
+- Correct acquisition date
+- Correct T1 sequence
+- Correct 3D FLAIR sequence
+- No localizer or derived series selected
+- Complete number of slices
+- No duplicated or partial series
+- Acceptable image quality
+
+The exact selection hierarchy from `Final_T1_T2_Ranking.m` should be documented in a separate file.
+
+---
+
+## 11. Convert DICOM to NIfTI
+
+For each subject, the notebook:
+
+1. Finds the T1 and FLAIR DICOM folders.
+2. Deletes the existing `NIFTI` directory.
+3. Creates a new `NIFTI` directory.
+4. Converts each DICOM series to `.nii`.
+5. Creates a compressed `.nii.gz` copy.
+6. Retains both formats.
+
+Expected outputs:
+
+```text
+NIFTI/t1w.nii
+NIFTI/t1w.nii.gz
+NIFTI/t2flair.nii
+NIFTI/t2flair.nii.gz
+```
+
+Core conversion command used by the notebook:
+
+```python
+dicom2nifti.dicom_series_to_nifti(dicom_dir, nii_path)
+```
+
+Compression:
+
+```python
+with open(nii_path, "rb") as f_in, gzip.open(gz_path, "wb") as f_out:
+    shutil.copyfileobj(f_in, f_out)
+```
+
+### Critical safety warning
+
+The notebook removes the entire existing `NIFTI` directory:
+
+```python
+shutil.rmtree(dpath_nifti)
+```
+
+This may delete previous processing outputs. Before running:
+
+- Confirm the subject list.
+- Confirm that the folder can safely be regenerated.
+- Back up any manually edited or unique files.
+- Test on one subject.
+- Review the output before running the full cohort.
+
+### Conversion QC
+
+For every subject verify:
+
+- Both `t1w.nii` and `t2flair.nii` exist.
+- Both compressed copies exist if required.
+- The images open correctly.
+- Orientation is correct.
+- Voxel dimensions are plausible.
+- T1 and FLAIR belong to the same subject and visit.
+- No truncation or major artifact is present.
+
+---
+
+# PART B — FLAIR-ASSISTED T1 PREPARATION
+
+## 12. Purpose of the Pial-Correction Preparation
+
+The notebook registers FLAIR to T1 and creates a modified T1 image intended for the subsequent pial-surface workflow.
+
+Input:
+
+```text
+NIFTI/t1w.nii
+NIFTI/t2flair.nii
+```
+
+Outputs:
+
+```text
+NIFTI/flair2t1.lta
+NIFTI/t2flair_PIAL_correction.nii
+NIFTI/t1w__PIAL_corrected.nii
+```
+
+---
+
+## 13. Register FLAIR to T1
+
+The notebook uses FreeSurfer tools.
+
+Registration:
+
+```bash
+mri_coreg \
+  --mov t2flair.nii \
+  --ref t1w.nii \
+  --reg flair2t1.lta
+```
+
+Resampling:
+
+```bash
+mri_vol2vol \
+  --mov t2flair.nii \
+  --targ t1w.nii \
+  --o t2flair_PIAL_correction.nii \
+  --reg flair2t1.lta \
+  --interp trilinear \
+  --no-save-reg
+```
+
+### Registration QC
+
+Overlay `t2flair_PIAL_correction.nii` on `t1w.nii` and confirm:
+
+- Ventricles align.
+- Brain boundaries align.
+- Corpus callosum and major sulci are consistent.
+- There is no left-right reversal.
+- There is no major translation or rotation error.
+- The FLAIR covers the full brain.
+
+A failed registration should not proceed to the enhancement step.
+
+---
+
+## 14. Create the Modified T1 Image
+
+The notebook normalizes the registered FLAIR by its maximum intensity and identifies voxels below `0.1`:
+
+```python
+mask_low_flair = (
+    flair_reg_data / np.max(flair_reg_data)
+) < 0.1
+```
+
+The T1 intensity in these voxels is divided by two:
+
+```python
+t1_enh = t1_data.copy()
+t1_enh[mask_low_flair] /= 2
+```
+
+The result is saved as:
+
+```text
+NIFTI/t1w__PIAL_corrected.nii
+```
+
+### Processing behavior
+
+- Existing `t1w__PIAL_corrected.nii` files are skipped.
+- Subjects missing either T1 or FLAIR are skipped.
+- The notebook runs subjects in parallel.
+- The current worker count is:
+
+```python
+max_workers = 16
+```
+
+### Important documentation requirement
+
+This intensity-modification rule is a project-specific heuristic. The Wiki must record:
+
+- Why the threshold `0.1` was selected
+- Who approved the procedure
+- Whether it was validated
+- Which FreeSurfer workflow requires it
+- Whether the original T1 should also be processed for comparison
+- Known limitations
+
+Do not change this threshold without validation and project approval.
+
+### Pial-preparation QC
+
+Compare:
+
+```text
+t1w.nii
+t2flair_PIAL_correction.nii
+t1w__PIAL_corrected.nii
+```
+
+Confirm:
+
+- Registration is correct.
+- No NaN or infinite values are present.
+- The modified T1 has not lost major brain structures.
+- The image header and affine remain consistent with the original T1.
+- The modification is limited to the intended low-FLAIR regions.
+
+---
+
+
+
+# FreeSurfer Workflow
+
+@[toc]()
+
+## 15. Configure FreeSurfer Directories
+
+The notebook defines:
+
+```python
+dpath_freesurfer = os.path.join(dpath_top, "freesurfer")
+dpath_fs_slurm = os.path.join(dpath_freesurfer, "slurm")
+dpath_fs_input = os.path.join(dpath_freesurfer, "subraw")
+```
+
+Several output paths appear in sequence:
+
+```python
+dpath_fs_output = os.path.join(dpath_freesurfer, "ALL_PIB_FS73")
+dpath_fs_output = os.path.join(dpath_freesurfer, "ALL_PIB_FS81")
+dpath_fs_output = os.path.join(
+    dpath_freesurfer,
+    "ALL_PIB_FS74_reconallClinical"
+)
+dpath_fs_output = os.path.join(
+    dpath_freesurfer,
+    "ALL_PIB_WMHSynthSeg_out"
+)
+```
+
+Only the final assignment remains active in Python.
+
+### Required correction
+
+Select one approved output directory explicitly. Do not leave multiple sequential assignments.
+
+Example:
+
+```python
+approved_fs_version = "FS81"
+dpath_fs_output = os.path.join(
+    dpath_freesurfer,
+    "ALL_PIB_FS81"
+)
+```
+
+The shell script module must match the approved FreeSurfer version.
+
+---
+
+## 16. Prepare FreeSurfer Inputs
+
+The notebook copies four possible inputs into `freesurfer/subraw`:
+
+| Source file | Destination naming |
+|---|---|
+| `t1w.nii` | `<SUBJECT_ID>T1.nii` |
+| `t2flair.nii` | `<SUBJECT_ID>T2.nii` |
+| `t1w__PIAL_corrected.nii` | `<SUBJECT_ID>_1PIALT1.nii` |
+| `t2flair_PIAL_correction.nii` | `<SUBJECT_ID>_1PIALT2.nii` |
+
+Code pattern:
+
+```python
+files_map = {
+    "t1w.nii": f"{subject_id}T1.nii",
+    "t2flair.nii": f"{subject_id}T2.nii",
+    "t1w__PIAL_corrected.nii":
+        f"{subject_id}_1PIALT1.nii",
+    "t2flair_PIAL_correction.nii":
+        f"{subject_id}_1PIALT2.nii",
+}
+```
+
+### Execution-order warning
+
+In the original notebook, the cell that copies files uses `dpath_fs_input` before the directory-configuration cell appears. In a fresh kernel this can produce a `NameError`.
+
+Always run the directory-configuration section before the file-copy section.
+
+---
+
+## 17. Submit FreeSurfer Processing
+
+Current launcher:
+
+```python
+script_path = (
+    "/home/mhnadian/Documents/sparc/"
+    "wmh/sarray_freesurfer.sh"
+)
+```
+
+Execution:
+
+```bash
+bash /home/mhnadian/Documents/sparc/wmh/sarray_freesurfer.sh \
+  /data/project/jonmc-lab/fang_collab/ALL_ADRC_Dataset/freesurfer
+```
+
+The notebook output indicates that the launcher detected multiple files and submitted a Slurm batch job.
+
+### Before submission
+
+Confirm:
+
+- The shell script exists.
+- It is executable.
+- The FreeSurfer module/version is correct.
+- The input directory contains only the intended files.
+- The output directory is correct.
+- The Slurm log directory exists.
+- Resource requests are appropriate.
+- Existing outputs will not be overwritten unexpectedly.
+
+### After submission
+
+Record:
+
+- Slurm job ID
+- Submission date
+- FreeSurfer version
+- Input type used
+- Output folder
+- Completion status
+- Failed subjects
+- Rerun status
+
+---
+
+## 18. Select the FreeSurfer Result
+
+The notebook searches in this order:
+
+1. FreeSurfer 8.1 result using the pial-corrected T1 name
+2. FreeSurfer 7.3 result using the pial-corrected T1 name
+3. FreeSurfer 8.1 result using the original T1 name
+
+The required success file is:
+
+```text
+mri/aparc+aseg.mgz
+```
+
+The selected source is logged to:
+
+```text
+freesurfer_used_log.csv
+```
+
+Recommended log columns:
+
+```text
+Subject
+FreeSurferVersion
+InputType
+SourceDirectory
+ProcessingDate
+QCStatus
+Notes
+```
+
+### Important
+
+The source code defines an FS74 path but does not actually include FS74 in the selection logic. Confirm whether FS74 should remain an approved option.
+
+---
+
+## 19. Copy FreeSurfer Outputs to the Subject Folder
+
+The selected FreeSurfer subject directory is copied to:
+
+```text
+<SUBJECT>/freesurfer/
+```
+
+The notebook skips the copy when that destination already exists.
+
+Before accepting an existing destination, confirm that it corresponds to the intended FreeSurfer version and input image.
+
+---
+
+## 20. Register Native FLAIR to FreeSurfer Space
+
+Inputs:
+
+```text
+NIFTI/t2flair.nii
+freesurfer/mri/T1.mgz
+```
+
+Output:
+
+```text
+native_to_fs.lta
+```
+
+Command:
+
+```bash
+mri_coreg \
+  --mov NIFTI/t2flair.nii \
+  --ref freesurfer/mri/T1.mgz \
+  --reg native_to_fs.lta
+```
+
+The transform is then inverted:
+
+```bash
+lta_convert \
+  --inlta native_to_fs.lta \
+  --outlta fs_to_native.lta \
+  --invert
+```
+
+Output:
+
+```text
+fs_to_native.lta
+```
+
+---
+
+## 21. Resample FreeSurfer Outputs into Native FLAIR Space
+
+### `aparc+aseg`
+
+```bash
+mri_vol2vol \
+  --mov freesurfer/mri/aparc+aseg.mgz \
+  --targ NIFTI/t2flair.nii \
+  --o NIFTI/aparc+aseg.nii \
+  --reg fs_to_native.lta \
+  --interp nearest \
+  --no-save-reg
+```
+
+### Brain mask
+
+```bash
+mri_vol2vol \
+  --mov freesurfer/mri/brainmask.mgz \
+  --targ NIFTI/t2flair.nii \
+  --o NIFTI/brainmask.nii \
+  --reg fs_to_native.lta \
+  --interp nearest \
+  --no-save-reg
+```
+
+### FreeSurfer T1
+
+```bash
+mri_vol2vol \
+  --mov freesurfer/mri/T1.mgz \
+  --targ NIFTI/t2flair.nii \
+  --o NIFTI/T1w_R.nii \
+  --reg fs_to_native.lta \
+  --interp trilinear \
+  --no-save-reg
+```
+
+Nearest-neighbor interpolation is used for segmentation/label images. Trilinear interpolation is used for the intensity image.
+
+### Expected outputs
+
+```text
+NIFTI/aparc+aseg.nii
+NIFTI/brainmask.nii
+NIFTI/T1w_R.nii
+native_to_fs.lta
+fs_to_native.lta
+```
+
+### QC
+
+Overlay each output on `NIFTI/t2flair.nii`:
+
+- `aparc+aseg.nii`
+- `brainmask.nii`
+- `T1w_R.nii`
+
+Confirm:
+
+- Ventricles align.
+- White-matter boundaries are plausible.
+- Brain mask covers the brain without excessive nonbrain tissue.
+- No transform inversion error is present.
+- Labels remain discrete.
+- Orientation and voxel grid match the FLAIR.
+
+---
+
+
+# LST-LPA and WMH Postprocessing
+
+@[toc]()
+
+## 22. Run LST-LPA
+
+WMH postprocessing begins after the MATLAB LST-LPA process.
+
+A separate SOP must document:
+
+- MATLAB version
+- SPM version
+- LST version
+- LPA module/version
+- Input T1 and FLAIR files
+- Batch configuration
+- Output directory
+- Output filename
+- Required preprocessing
+- Error handling
+- QC procedure
+
+The expected probability-map naming after standardization is:
+
+```text
+wmh/ples_FLAIR.nii
+```
+
+Do not proceed until the LST-LPA result has been visually checked.
+
+---
+
+# PART E — WMH POSTPROCESSING
+
+## 23. Folder Management and Backups
+
+The notebook contains multiple operations that rename, copy, or delete folders:
+
+```text
+wmh
+wmh_normal_raw
+wmh_denoised
+wmh_denoised_raw
+lst_results
+```
+
+Examples include:
+
+```python
+os.rename(old_wmh, new_wmh)
+shutil.copytree(old_wmh, new_wmh)
+shutil.rmtree(lst_results_path)
+```
+
+### Required safety procedure
+
+Before any rename or deletion:
+
+1. Print the complete source and destination paths.
+2. Test on one subject.
+3. Confirm that the destination does not already exist.
+4. Make a backup when the folder contains unique results.
+5. Record which WMH branch is active.
+6. Never run all housekeeping cells automatically.
+
+Recommended safe helper:
+
+```python
+def safe_rename(source, destination):
+    if not os.path.exists(source):
+        print(f"Missing source: {source}")
+        return
+
+    if os.path.exists(destination):
+        print(f"Destination already exists: {destination}")
+        return
+
+    print(f"Renaming:\n  {source}\n  -> {destination}")
+    os.rename(source, destination)
+```
+
+### Important notebook inconsistency
+
+Some saved notebook outputs do not match the current source code in their cells. This indicates that code was edited after execution. Clear all outputs and rerun the notebook before using the displayed output as evidence.
+
+---
+
+## 24. Standardize LST-LPA Filenames
+
+Inside the active `wmh` folder, the notebook renames items by:
+
+```python
+new_name = (
+    old_name
+    .replace("mrt2flair", "FLAIR")
+    .replace("_lpa", "")
+)
+```
+
+This is intended to standardize files such as the LPA lesion-probability output to:
+
+```text
+ples_FLAIR.nii
+```
+
+After renaming, verify that:
+
+- Only the intended substring was changed.
+- No two source files were mapped to the same destination name.
+- The required `ples_FLAIR.nii` exists.
+- The probability map opens correctly.
+- The probability values are in the expected range.
+
+---
+
+## 25. Set the SPARC Script Path
+
+```python
+os.environ["FPATH_scripts"] = (
+    "/home/mhnadian/Documents/sparc"
+)
+```
+
+Verification:
+
+```bash
+echo ${FPATH_scripts}
+```
+
+The environment variable must point to the approved version of the repository.
+
+---
+
+## 26. Convert the Probability Map to a Lesion Mask
+
+For each subject, the notebook runs:
+
+```bash
+python3 \
+  /home/mhnadian/Documents/sparc/wmh/lpa_processOutput1.py \
+  --dpath_pt <SUBJECT_PATH> \
+  --lpa_thresh 0.36 \
+  --t2flair_wildcard "DICOM/*FLAIR*"
+```
+
+Current parameter:
+
+```text
+LPA probability threshold = 0.36
+```
+
+Based on notebook execution messages, the script uses:
+
+```text
+wmh/ples_FLAIR.nii
+NIFTI/t2flair.nii
+native_to_fs.lta
+```
+
+Expected outputs include:
+
+```text
+wmh/plesCoreg_FLAIR.nii
+wmh/wmhMaskCoreg_FLAIR_p0.36.nii
+```
+
+### Interpretation
+
+- `ples_FLAIR.nii`: raw LST-LPA probability map
+- `plesCoreg_FLAIR.nii`: probability map transformed to the processing/FreeSurfer space
+- `wmhMaskCoreg_FLAIR_p0.36.nii`: binary WMH mask produced using threshold `0.36`
+
+### Required validation
+
+The source code of `lpa_processOutput1.py` must be added to this component. The Wiki should document:
+
+- Exact transform direction
+- Target image/grid
+- Interpolation type
+- Thresholding operation
+- Morphological cleanup, if any
+- Error handling
+- Required output checks
+
+### Recommended execution method
+
+The notebook uses `os.system`, which does not automatically stop on failure. Prefer:
+
+```python
+import subprocess
+
+subprocess.run(
+    [
+        "python3",
+        "/home/mhnadian/Documents/sparc/wmh/"
+        "lpa_processOutput1.py",
+        "--dpath_pt",
+        subject_path,
+        "--lpa_thresh",
+        "0.36",
+        "--t2flair_wildcard",
+        "DICOM/*FLAIR*",
+    ],
+    check=True,
+)
+```
+
+---
+
+## 27. Group Lesions and Compute Volumes
+
+For each subject, the notebook runs:
+
+```bash
+python3 \
+  /home/mhnadian/Documents/sparc/wmh/wmh_analyze.py \
+  --dpath_pt <SUBJECT_PATH> \
+  --prob_thresh 0.36 \
+  --grouping lesion
+```
+
+Based on the notebook execution output, this script:
+
+1. Loads the WMH mask.
+2. Loads ventricular and white-matter information.
+3. Generates connected components.
+4. Treats connected components as individual lesions.
+5. Classifies lesions based on their relationship or distance to the ventricles.
+6. Calculates group statistics.
+7. Adds total white-matter volume.
+8. Creates a multi-label WMH segmentation.
+
+Expected outputs include:
+
+```text
+wmh/wmh4label_p0.36.nii
+wmh/lesion_groupStats_p0.36.csv
+```
+
+The notebook reports these class names:
+
+```text
+AV-WMH
+D-WMH
+PV-WMH
+T-WM
+```
+
+### Important definition requirement
+
+The notebook does not contain the exact definitions or distance thresholds for `AV-WMH`, `D-WMH`, and `PV-WMH`. Do not guess these definitions in the final research documentation.
+
+Copy the exact definitions, distance thresholds, label values, and units from `wmh_analyze.py` into this Wiki after reviewing the script.
+
+`T-WM` appears to represent total white-matter volume. It should not be confused with total WMH volume.
+
+When needed, total WMH may be derived from the three WMH classes only after confirming the class definitions and missing-value rules:
+
+```python
+total_wmh = av_wmh + d_wmh + pv_wmh
+```
+
+---
+
+## 28. Compile Subject-Level Results
+
+The first compilation method creates:
+
+```text
+<dpath_top>/wmh/compiled_wmh_p0.36.csv
+```
+
+Columns:
+
+```text
+SubjID
+AV-WMH
+D-WMH
+PV-WMH
+T-WM
+```
+
+The helper function returns `NaN` when a class is absent:
+
+```python
+def get_vol_if_exists(df, class_name):
+    selected = df.loc[
+        df["Class"] == class_name,
+        "Vol_mm3"
+    ]
+
+    if not selected.empty:
+        return selected.values[0]
+
+    return np.nan
+```
+
+---
+
+## 29. Create the Dated Cohort Summary and QC Flags
+
+The second compilation method creates:
+
+```text
+WMH_Total_PIB_subjects_denoised_<YYYY-MM-DD>.csv
+```
+
+Columns:
+
+```text
+ADRC
+WMH_Date_processing
+AV-WMH
+D-WMH
+PV-WMH
+T-WM
+Status
+```
+
+If `lesion_groupStats_p0.36.csv` is missing, the row is marked:
+
+```text
+Processing Failed
+```
+
+A separate missing-subject list is also created:
+
+```text
+missing_csv_subjects_<YYYY-MM-DD>.txt
+```
+
+### QC-case selection
+
+For each of these classes:
+
+```text
+AV-WMH
+D-WMH
+PV-WMH
+```
+
+the notebook marks:
+
+- Three largest values
+- Three smallest values
+- Three values closest to the median
+
+Status examples:
+
+```text
+Max AV
+Min AV
+Median AV
+Max D
+Min D
+Median D
+Max PV
+Min PV
+Median PV
+```
+
+This is useful for selecting a range of cases for visual QC.
+
+### Critical missing-value inconsistency
+
+The two compilation methods handle absent classes differently:
+
+- One method uses `NaN`.
+- The other initializes missing class values as `0`.
+
+These are not equivalent.
+
+Before final analysis, decide whether an absent class means:
+
+1. A true volume of zero, or
+2. Missing/failed classification.
+
+Document the rule and use it consistently.
+
+---
+
+
+# Native-Space Output, DICOM, Results, and QC
+
+@[toc]()
+
+## 30. Transform the Four-Label WMH Map to Native FLAIR Space
+
+Input:
+
+```text
+wmh/wmh4label_p0.36.nii
+NIFTI/t2flair.nii
+fs_to_native.lta
+```
+
+Output:
+
+```text
+wmh/rwmh4label_p0.36.nii
+```
+
+Command:
+
+```bash
+mri_vol2vol \
+  --mov wmh/wmh4label_p0.36.nii \
+  --targ NIFTI/t2flair.nii \
+  --o wmh/rwmh4label_p0.36.nii \
+  --lta fs_to_native.lta \
+  --interp nearest
+```
+
+Nearest-neighbor interpolation is required because this is a label image.
+
+### QC
+
+Overlay `rwmh4label_p0.36.nii` on native `t2flair.nii` and verify:
+
+- Labels align with FLAIR hyperintensities.
+- Labels are not blurred.
+- Only valid integer labels are present.
+- No major shift, rotation, or inversion is present.
+- Ventricular relationships are preserved.
+
+---
+
+## 31. Convert the Native-Space WMH Label Map to DICOM
+
+The notebook optionally:
+
+1. Finds the first DICOM folder containing `flair`.
+2. Loads it as the reference volume with SimpleITK.
+3. Loads `rwmh4label_p0.36.nii`.
+4. Resamples the label map to the reference DICOM grid with nearest-neighbor interpolation.
+5. Reads the reference DICOM slices with pydicom.
+6. Replaces the pixel data with the WMH label map.
+7. Creates new SOP Instance UIDs.
+8. Creates one new Series Instance UID.
+9. Sets:
+
+```text
+SeriesDescription = WMH_LabelMap_Resampled
+```
+
+10. Writes the derived series to:
+
+```text
+wmh/wmh_Mask_DICOM/
+```
+
+### Required packages
+
+```python
+import SimpleITK as sitk
+import pydicom
+from pydicom.uid import generate_uid
+```
+
+### Important limitations
+
+This output is a derived image series created by replacing pixel data in copied MR DICOM datasets. It is not automatically a standards-compliant DICOM SEG object.
+
+Before clinical or research-system use, validate:
+
+- Geometry
+- Slice ordering
+- Pixel representation
+- Bits allocated/stored
+- Series and SOP UIDs
+- Modality and image type
+- Patient/study metadata
+- De-identification
+- Compatibility with the destination viewer
+- Whether DICOM SEG is required instead
+
+The copied DICOM metadata may retain protected health information. Do not upload the generated DICOM series to OSF.
+
+---
+
+# PART G — OUTPUT DATA DICTIONARY
+
+## 32. Main Output Files
+
+| Output | Description |
+|---|---|
+| `t1w.nii` | T1-weighted MRI converted from DICOM |
+| `t1w.nii.gz` | Compressed T1 NIfTI |
+| `t2flair.nii` | T2-FLAIR converted from DICOM |
+| `t2flair.nii.gz` | Compressed FLAIR NIfTI |
+| `t2flair_original.nii` | Recommended preserved copy of the original T2-FLAIR |
+| `t2flair_nlm_denoised.nii` | Recommended optional NLM-denoised T2-FLAIR output |
+| `flair2t1.lta` | FLAIR-to-T1 registration |
+| `t2flair_PIAL_correction.nii` | FLAIR resampled to T1 space |
+| `t1w__PIAL_corrected.nii` | Modified T1 used for the pial workflow |
+| `native_to_fs.lta` | Native FLAIR-to-FreeSurfer transform |
+| `fs_to_native.lta` | Inverse transform |
+| `T1w_R.nii` | FreeSurfer T1 resampled into native FLAIR space |
+| `aparc+aseg.nii` | FreeSurfer parcellation/segmentation in native FLAIR space |
+| `brainmask.nii` | FreeSurfer brain mask in native FLAIR space |
+| `ples_FLAIR.nii` | Raw LST-LPA lesion-probability map |
+| `plesCoreg_FLAIR.nii` | Lesion-probability map in processing space |
+| `wmhMaskCoreg_FLAIR_p0.36.nii` | Binary WMH mask thresholded at 0.36 |
+| `wmh4label_p0.36.nii` | Classified WMH label map |
+| `lesion_groupStats_p0.36.csv` | Subject-level WMH class volumes |
+| `rwmh4label_p0.36.nii` | Classified label map in native FLAIR space |
+| `wmh_Mask_DICOM/` | Optional derived label-map DICOM series |
+| `compiled_wmh_p0.36.csv` | Cohort compilation |
+| `WMH_Total_PIB_subjects_denoised_<DATE>.csv` | Dated cohort summary and QC flags |
+| `missing_csv_subjects_<DATE>.txt` | Subjects missing final statistics |
+| `freesurfer_used_log.csv` | FreeSurfer source/version log |
+
+---
+
+# PART H — QUALITY CONTROL
+
+## 33. Subject-Level QC Checklist
+
+### Input data
+
+- [ ] Correct subject and visit
+- [ ] Correct T1 series
+- [ ] Correct 3D FLAIR series
+- [ ] Complete DICOM series
+- [ ] No major motion or acquisition artifact
+- [ ] T1 and FLAIR are from the same visit
+
+### NIfTI conversion
+
+- [ ] T1 opens correctly
+- [ ] FLAIR opens correctly
+- [ ] Orientation is correct
+- [ ] Voxel dimensions are plausible
+- [ ] No truncation
+- [ ] Required `.nii` and `.nii.gz` files exist
+
+### Optional denoising
+
+- [ ] Original T2-FLAIR retained
+- [ ] Denoised output saved separately
+- [ ] Denoising status recorded
+- [ ] `sigma` recorded
+- [ ] Final `h` recorded
+- [ ] NLM parameters recorded
+- [ ] Original and denoised images visually compared
+- [ ] Edges and small lesions preserved
+- [ ] No patch artifacts introduced
+- [ ] Downstream WMH differences reviewed
+
+### Pial preparation
+
+- [ ] FLAIR-to-T1 registration is correct
+- [ ] Modified T1 has expected appearance
+- [ ] No invalid voxel values
+- [ ] Header/affine preserved
+
+### FreeSurfer
+
+- [ ] FreeSurfer completed
+- [ ] `aparc+aseg.mgz` exists
+- [ ] `brainmask.mgz` exists
+- [ ] Correct version/input recorded
+- [ ] Cortical and subcortical segmentation reviewed
+- [ ] Major pial/white-surface failure documented
+
+### Native-space transformations
+
+- [ ] `T1w_R.nii` aligns with FLAIR
+- [ ] `aparc+aseg.nii` aligns with FLAIR
+- [ ] `brainmask.nii` aligns with FLAIR
+- [ ] Label interpolation is nearest neighbor
+
+### LST-LPA and WMH mask
+
+- [ ] `ples_FLAIR.nii` exists
+- [ ] Probability map aligns with FLAIR
+- [ ] Threshold is recorded as 0.36
+- [ ] Binary mask exists
+- [ ] False positives reviewed
+- [ ] Obvious lesions are not systematically missed
+
+### WMH classification and volume
+
+- [ ] Four-label map exists
+- [ ] Label values are valid
+- [ ] Lesions align with FLAIR hyperintensities
+- [ ] Ventricle-related classification is plausible
+- [ ] Subject CSV exists
+- [ ] Volume units are `mm3`
+- [ ] Missing classes handled consistently
+- [ ] Processing status recorded
+
+### Optional DICOM output
+
+- [ ] Derived series geometry matches FLAIR
+- [ ] Slice order is correct
+- [ ] New UIDs are present
+- [ ] Series description is correct
+- [ ] PHI handling is approved
+- [ ] Viewer compatibility tested
+
+---
+
+## 34. Cohort-Level QC
+
+Review at minimum:
+
+- All processing failures
+- All missing CSV cases
+- Three maximum AV-WMH cases
+- Three minimum AV-WMH cases
+- Three median AV-WMH cases
+- Three maximum D-WMH cases
+- Three minimum D-WMH cases
+- Three median D-WMH cases
+- Three maximum PV-WMH cases
+- Three minimum PV-WMH cases
+- Three median PV-WMH cases
+- Random additional cases
+- Subjects with unusual total white-matter volume
+- Subjects with very low or zero WMH volume
+- Subjects with very large WMH volume
+
+Record QC in a table:
+
+| Subject | Input QC | Registration QC | FreeSurfer QC | WMH QC | Volume QC | Final status | Notes |
+|---|---|---|---|---|---|---|---|
+| `<ID>` | Pass/Fail | Pass/Fail | Pass/Fail | Pass/Fail | Pass/Fail | Approved/Repeat/Exclude | Notes |
+
+---
+
