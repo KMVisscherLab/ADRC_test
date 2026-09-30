@@ -13,10 +13,10 @@
 
 ## 🧭 Overview
 For an overview of the processes that lead up to participants in our study undergoing imaging, please see ***Chad's flowchart** 
-\
+
 
 To suggest changes to this document, please email Kristina Visscher. 
-Contact information for the people described here are listed in this password protected [document](https://uab.app.box.com/file/2495951435335) XXhow to make it visible to all our folksXXXXXXXX. 
+Contact information for the people described here are listed in this password protected [document](https://uab.app.box.com/file/2495951435335).   XXhow to make it visible to all our folksXXXXXXXX. 
 
 <hr style="height: 4px; background: #0969da; border: none; margin: 48px 0 32px 0; border-radius: 2px;" />
 
@@ -51,7 +51,7 @@ Imaging Data are collected on "Amyloid Day" and "Tau Day".
 * [Participant Information Sheets](02-during-the-scan/amy-PI.docx) are forms that include checklists for during-scan acquisition and places for notes during the scan.
 
 ### Data Uploads:
-* DESCRIBE THE PROCESS OF UPLOADING THE IMAGING DATA, BOTH PET AND MRI (PERHAPS LINK TO DOCUMENT)
+* DESCRIBE THE PROCESS OF UPLOADING THE IMAGING DATA, BOTH PET AND MRI (PERHAPS LINK TO redcap input form)
 * DESCRIBE WHERE THE OTHER DATA, INCLUDING REDCAP, GOES (PERHAPS LINK TO DOCUMENT)
 
 ### Contacts:
