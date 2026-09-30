@@ -1,4 +1,4 @@
-# 🧠 UAB ADRC Multimodal Imaging & Biomarker Study Protocols 🧠 
+# 🧠 UAB ADRC Multimodal Imaging Study Protocols 🧠 
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.placeholder.svg)](https://zenodo.org/)
 ![NIH Funding](https://img.shields.io/badge/NIH-Supported-blue)
