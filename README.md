@@ -13,6 +13,7 @@
 
 ## 🧭 Overview
 For an overview of the processes that lead up to participants in our study undergoing imaging, please see ***Chad's flowchart** 
+
 [This messy figure](OrderOfEvents.pptx) describes the general overview of the order of events in this project.
 
 
