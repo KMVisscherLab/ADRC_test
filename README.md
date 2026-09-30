@@ -67,8 +67,8 @@ Initial image quality checks, standardized preprocessing for open data sharing, 
 
 ### A. Pre-Processing for Data Sharing
 
-**Describe the process that Mohammad goes through to do a first pass analysis of the dataset.
-**Describe the hand off from Mohammad to Deepak and Vee to get the dataset ready for further review and upload to SCAN. [maybe this is a link to a word document?]
+**Describe the process that Mohammad goes through to do a first pass analysis of the dataset.  Perhaps this is a link to this document: https://uab.app.box.com/file/2293900374288? XXXXX
+**Describe the hand off from Mohammad to Deepak and Vee to get the dataset ready for further review and upload to SCAN. [maybe this is a link to a word document?, maybe this one: https://uab.app.box.com/file/2293900374288 ??] XXXXXXX
 
 | Pipeline Step | Focus Area | Link |
 | :--- | :--- | :--- |
