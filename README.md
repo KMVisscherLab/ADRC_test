@@ -46,11 +46,13 @@ Imaging Data are collected on "Amyloid Day" and "Tau Day".
 * Possible PET tracers include: XXXXXX
 * [Manual of Procedures](02-during-the-scan/tau-MOP.docx) are detailed explanations of the set of procedures, including radiotracer administration timelines 
 * [Participant Information Sheets](02-during-the-scan/tau-PI.docx) are forms that include checklists for during-scan acquisition and places for notes during the scan.
+* [Tau Scan Protocol](02-during-the-scan/tau-protocol.pdf) is a GE formatted description of the tau scan. 
 
 ### Amyloid Day: 
 * Possible PET tracers include: XXXXXX
 * [Manual of Procedures](02-during-the-scan/amy-MOP.docx) are detailed explanations of the set of procedures, including radiotracer administration timelines 
 * [Participant Information Sheets](02-during-the-scan/amy-PI.docx) are forms that include checklists for during-scan acquisition and places for notes during the scan.
+* [Amyloid Scan Protocol](02-during-the-scan/amy-protocol.pdf) is a GE formatted description of the amyloid scan. 
 
 ### Data Uploads:
 * DESCRIBE THE PROCESS OF UPLOADING THE IMAGING DATA, BOTH PET AND MRI (PERHAPS LINK TO redcap input form)
