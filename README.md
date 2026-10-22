@@ -55,8 +55,9 @@ Imaging Data are collected on "Amyloid Day" and "Tau Day".
 * [Amyloid Scan Protocol](02-during-the-scan/amy-protocol.pdf) is a GE formatted description of the amyloid scan. 
 
 ### Data Uploads:
-* DESCRIBE THE PROCESS OF UPLOADING THE IMAGING DATA, BOTH PET AND MRI (PERHAPS LINK TO redcap input form)
-* DESCRIBE WHERE THE OTHER DATA, INCLUDING REDCAP, GOES (PERHAPS LINK TO DOCUMENT)
+* [Protocol for uploading imaging data](02-during-the-scan/UploadImagingData.md)
+* [Protocol for uploading behavioral data associated with imaging](02-during-the-scan/UploadOtherDataFromImagingDay.md)
+
 
 ### Contacts:
 * For questions about scan acquisition, contact: Dean Fang for science-based PET questions, Kristina Visscher for science-based MRI questions, Denise Jeffers for questions about tracer production, Tyler Stamps for participant wrangling.
