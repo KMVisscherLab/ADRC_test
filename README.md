@@ -43,15 +43,15 @@ Participant identification, registry screening, consenting procedures, and MRI/P
 
 Imaging Data are collected on "Amyloid Day" and "Tau Day".
 ### Tau Day: 
-* Possible PET tracers include: XXXXXX
-* [Manual of Procedures](02-during-the-scan/tau-MOP.docx) are detailed explanations of the set of procedures, including radiotracer administration timelines 
-* [Participant Information Sheets](02-during-the-scan/tau-PI.docx) are forms that include checklists for during-scan acquisition and places for notes during the scan.
+* Possible PET tracers include: AV1451
+* [Manual of Procedures](02-during-the-scan/tau-MOP.pdf) are detailed explanations of the set of procedures, including radiotracer administration timelines 
+* [Participant Information Sheets](02-during-the-scan/tau-PI.pdf) are forms that include checklists for during-scan acquisition and places for notes during the scan.
 * [Tau Scan Protocol](02-during-the-scan/tau-protocol.pdf) is a GE formatted description of the tau scan. 
 
 ### Amyloid Day: 
-* Possible PET tracers include: XXXXXX
-* [Manual of Procedures](02-during-the-scan/amy-MOP.docx) are detailed explanations of the set of procedures, including radiotracer administration timelines 
-* [Participant Information Sheets](02-during-the-scan/amy-PI.docx) are forms that include checklists for during-scan acquisition and places for notes during the scan.
+* Possible PET tracers include: PIB, Amyvid
+* [Manual of Procedures](02-during-the-scan/amy-MOP.pdf) are detailed explanations of the set of procedures, including radiotracer administration timelines 
+* [Participant Information Sheets](02-during-the-scan/amy-PI.pdf) are forms that include checklists for during-scan acquisition and places for notes during the scan.
 * [Amyloid Scan Protocol](02-during-the-scan/amy-protocol.pdf) is a GE formatted description of the amyloid scan. 
 
 ### Data Uploads:
