@@ -28,7 +28,7 @@ Participant identification, registry screening, consenting procedures, and MRI/P
 
 | Protocol / SOP | Study Track | Format | Link |
 | :--- | :--- | :--- | :--- |
-| **Participant Recruitment** | ADRC Cohort | 📄 Word Doc | [View Protocol](an/recruitment-adrc.docx01-before-the-scan/recruitment-adrc.docx) |
+| **Participant Recruitment** | ADRC Cohort | 📄 PDF | [View Protocol](an/recruitment-adrc.docx01-before-the-scan/recruitment-adrc.docx) |
 | **Participant Recruitment** | CLARITI Cohort | 📄 Word Doc | [View Protocol](01-before-the-scan/recruitment-clariti.docx) |
 | **Enrollment, Consenting & Scheduling** | All Participants | 📄 Word Doc | [View Protocol](01-before-the-scan/enrollment-consenting-scheduling.docx) |
 
@@ -84,6 +84,7 @@ Initial image quality checks, standardized preprocessing for open data sharing, 
 
 | Resource | Target System | Link |
 | :--- | :--- | :--- |
+| **Imaging QC and Data Logging** | Local / Cheaha | [View QC Tracker](03-after-the-scan/data-storage/METAFuN_ADRC_QCLog.pdf) |
 | **Summary of Storage Contents** | Local / Cloud Tiers | [View Storage Manifest](03-after-the-scan/data-storage/storage-summary-manifest.md) |
 | **SCAN / DVCID & LONI Archiving** | LONI / External Repositories | [View Archiving SOP](03-after-the-scan/data-storage/scan-dvcid-and-loni-archiving.md) |
 
