@@ -33,9 +33,9 @@ Participant identification, registry screening, consenting procedures, and MRI/P
 | **Enrollment, Consenting & Scheduling** | All Participants | 📄 Word Doc | [View Protocol](01-before-the-scan/enrollment-consenting-scheduling.docx) |
 
 ### Scheduling
-* Schedules for the PET MRI are in a password protected calendar here: ###link to uabmc calendar### (you will need your uabmc credentials to view)
-* Scheduling for the PET MRI depends on time slots available, along with tracer production.  More information about that is here XXbox folderXXXXX
-* 
+* Schedules for the PET MRI are in a password protected calendar on uabmc outlook.  The name of the calendar is "WTI PET Research."  You need permissions to view it, which you can get from Lucas Riley.
+* Scheduling for the PET MRI depends on time slots available, along with tracer production.  Details about the current weekly template (as of November 2026) are [here](01-before-the-scan/SchedulingTemplate.xlsx)
+
 
 <hr style="height: 4px; background: #0969da; border: none; margin: 48px 0 32px 0; border-radius: 2px;" />
 
