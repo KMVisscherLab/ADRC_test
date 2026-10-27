@@ -10,6 +10,16 @@ Imaging data is uploaded using this protocol:
   * At the scanner, data are pushed to MIM.  This only pushes the DICOMs
   * Thus all data must also be saved on a USB, and transferred by hand, like it is 1999.
     * This includes all dicoms as well as all .list files for PET data.  
-    * The best way to move these data is to use [what's the name of the program you use to zip and transfer the data?]
-    * These files are moved to this location on CHEAHA as well as this location on CHEAHA *** for Deepak to read.
+    * The best way to move these data is to use the program Easy_Export.py on the console computer.  This program came from Alex Smith at GE.  EasyExport puts the files on an SSD which we have attached to the the console computer
+    * These files are zipped on nautilus on the console.
+    * These files are then moved from the ssd to Cheaha via rc upload (or sometimes another portal like filezilla)
+    * Files are named by subject and by tracer.
+    * All files:
+      *  dkalbilab/ADRC/ 
+    * Tau Day only: 
+      *  Files are moved to /data/project/vislab/raw/METAFUN/ADRC/[ADCID]/ses-[TRACER]/
+      *   [ADCID] is the subject number, which differs, and [TRACER] is AV1451 or ML.
+   
+    * 
+    * moved to this location on CHEAHA as well as this location on CHEAHA *** for Deepak to read.
   * The data from this USB are transferred [how?  on your computer? do you use cyberduck or something else? ] to Box.  [also to cheaha?] 
