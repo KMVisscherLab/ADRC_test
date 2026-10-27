@@ -17,8 +17,8 @@ Imaging data is uploaded using this protocol:
     * All files go to this directory:
       *  (Mohammad, please fill this part in:  dkalbilab/ADRC/ ????)
     * Tau Day only: 
-      *  Files are moved to /data/project/vislab/raw/METAFUN/ADRC/[ADCID]/ses-[TRACER]/
-      *   [ADCID] is the subject number, which differs, and [TRACER] is AV1451 or ML.
+      *  Files are moved to CHEAHA /data/project/vislab/raw/METAFUN/ADRC/[ADCID]/ses-[TRACER]/
+      *   [ADCID] is the subject number, which differs per subject, and [TRACER] is AV1451 or ML.
    
     * 
     * moved to this location on CHEAHA as well as this location on CHEAHA *** for Deepak to read.
