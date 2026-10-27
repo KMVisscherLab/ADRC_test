@@ -14,8 +14,8 @@ Imaging data is uploaded using this protocol:
     * These files are zipped on nautilus on the console.
     * These files are then moved from the ssd to Cheaha via rc upload (or sometimes another portal like filezilla)
     * Files are named by subject and by tracer.
-    * All files:
-      *  dkalbilab/ADRC/ 
+    * All files go to this directory:
+      *  (Mohammad, please fill this part in:  dkalbilab/ADRC/ ????)
     * Tau Day only: 
       *  Files are moved to /data/project/vislab/raw/METAFUN/ADRC/[ADCID]/ses-[TRACER]/
       *   [ADCID] is the subject number, which differs, and [TRACER] is AV1451 or ML.
